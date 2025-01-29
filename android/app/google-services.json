@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "390960971384",
+    "firebase_url": "https://acheidocs-c7b8f-default-rtdb.firebaseio.com",
+    "project_id": "acheidocs-c7b8f",
+    "storage_bucket": "acheidocs-c7b8f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390960971384:android:f0d21aada815628330778d",
+        "android_client_info": {
+          "package_name": "com.example.achei"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqDi8D3ljwpt3dtkj7w8H-P_jrS6-U5XI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
