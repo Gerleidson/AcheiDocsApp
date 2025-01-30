@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class Sobre extends StatelessWidget {
   final String appVersion = "1.0.0"; // Altere para a versão do seu app
   final String privacyPolicyUrl = "https://seusite.com/politica-de-privacidade"; // URL real
@@ -131,7 +130,7 @@ class Sobre extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  // Código para abrir o navegador com a URL
+                  _launchUrl(url); // Alteração aqui
                 },
                 child: Text("Abrir"),
               ),
@@ -140,18 +139,29 @@ class Sobre extends StatelessWidget {
     );
   }
 
-  // Método para abrir o e-mail de suporte
+  // Método para abrir o e-mail
   void _abrirEmail(String email) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: email,
     );
 
-    if (await canLaunch(emailUri.toString())) {
-      await launch(emailUri.toString());
+    // Use launchUrl em vez de launch
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
     } else {
       // Caso não consiga abrir o e-mail
       throw 'Não foi possível abrir o app de e-mail.';
+    }
+  }
+
+  // Método para abrir URLs genéricas (como política de privacidade)
+  void _launchUrl(String url) async {
+    final Uri urlUri = Uri.parse(url);
+    if (await canLaunchUrl(urlUri)) {
+      await launchUrl(urlUri);
+    } else {
+      throw 'Não foi possível abrir o link.';
     }
   }
 }
