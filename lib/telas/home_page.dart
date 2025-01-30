@@ -24,22 +24,15 @@ class _HomePageState extends State<HomePage> {
   // Controle de dados do formulário de busca
   final TextEditingController _buscaController = TextEditingController();
 
-  List<String> documentos = [
-    'RG', 'CPF', 'CTPS', 'CNH', 'Passaporte', 'Título de Eleitor', 'Certidão', 'Outros'
-  ];
-
-  List<String> estadosBrasil = [
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AcheiDocs', style: TextStyle(fontWeight: FontWeight.bold)), foregroundColor: Colors.white,
+        title: const Text('AcheiDocs', style: TextStyle(fontWeight:
+        FontWeight.bold)), foregroundColor: Colors.white,
 
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor:Color(0xFF001b48),
         elevation: 4,
       ),
 
@@ -50,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color(0xFF001b48),
               ),
               child: Text(
                 'Menu',
@@ -62,7 +55,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: Icon(Icons.home),
-              title: Text('Página Inicial'),
+              title: Text('Inicio'),
               onTap: () {
                 Navigator.pop(context); // Fecha o menu
                 Navigator.pushReplacement(
@@ -107,14 +100,16 @@ class _HomePageState extends State<HomePage> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.blue.shade100,
+                color: Color(0xFF001b48),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Text(
-                'Confira se seu nome está em nosso banco de dados. Se estiver, entre em contato com o responsável através do telefone cadastrado.\n\n'
-                    'O cadastro será mantido por 120 dias a partir da data de registro.\n\n'
+                'Verifique se seu nome está no nosso banco de dados. Se '
+                    'estiver, entre em contato com o responsável pelo número '
+                    'registrado.\n\n O cadastro ficará ativo por 120 dias a '
+                    'partir da data de registro.\n'
                     'Nosso objetivo é facilitar a recuperação de seus documentos de forma rápida e segura!',
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+                style: TextStyle(fontSize: 14, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -171,6 +166,11 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Encontre seu documento pelo nome',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8), // Espaço entre o título e o campo
             const SizedBox(height: 8),
             TextFormField(
               controller: _buscaController,
@@ -336,122 +336,132 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text(
-              'Cadastro de Documento',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
+      padding: const EdgeInsets.all(3.0), //tamanho da largura da borda
+      child: Container(
+        padding: const EdgeInsets.all(16.0), // Adiciona padding interno ao
+        // container
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xFF001b48), // Cor da borda
+            width: 2.0, // Largura da borda
+          ),
+          borderRadius: BorderRadius.circular(12), // Borda arredondada
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'Cadastro de Documento',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF001b48),
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 20),
+            SizedBox(height: 20),
 
-          // Tipo - Radio Buttons
-          Text(
-            'Situação:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Row(
-            children: [
-              Radio<String>(
-                value: 'Achado',
-                groupValue: _tipoSelecionado,
-                onChanged: (value) {
-                  setState(() {
-                    _tipoSelecionado = value!;
-                  });
-                },
-              ),
-              Text('Achado'),
-              SizedBox(width: 20),
-              Radio<String>(
-                value: 'Perdido',
-                groupValue: _tipoSelecionado,
-                onChanged: (value) {
-                  setState(() {
-                    _tipoSelecionado = value!;
-                  });
-                },
-              ),
-              Text('Perdido'),
-            ],
-          ),
-          SizedBox(height: 20),
+            // Tipo - Radio Buttons
+            Text(
+              'Situação:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                Radio<String>(
+                  value: 'Achado',
+                  groupValue: _tipoSelecionado,
+                  onChanged: (value) {
+                    setState(() {
+                      _tipoSelecionado = value!;
+                    });
+                  },
+                ),
+                Text('Achado'),
+                SizedBox(width: 20),
+                Radio<String>(
+                  value: 'Perdido',
+                  groupValue: _tipoSelecionado,
+                  onChanged: (value) {
+                    setState(() {
+                      _tipoSelecionado = value!;
+                    });
+                  },
+                ),
+                Text('Perdido'),
+              ],
+            ),
+            SizedBox(height: 20),
 
-          _buildTextField(_nomeController, 'Nome Completo'),
-          SizedBox(height: 16),
+            _buildTextField(_nomeController, 'Nome Completo'),
+            SizedBox(height: 16),
 
-          _buildDropdown(
-            value: _documentoSelecionado,
-            options: documentos,
-            hint: 'Selecione o Documento',
-            onChanged: (value) {
-              setState(() {
-                _documentoSelecionado = value;
-              });
-            },
-          ),
-          SizedBox(height: 16),
+            _buildDropdown(
+              value: _documentoSelecionado,
+              options: documentos,
+              hint: 'Selecione o Documento',
+              onChanged: (value) {
+                setState(() {
+                  _documentoSelecionado = value;
+                });
+              },
+            ),
+            SizedBox(height: 16),
 
-          _buildTextField(_telefoneController, 'Telefone', inputFormatters: [maskFormatter]),
-          SizedBox(height: 16),
+            _buildTextField(_telefoneController, 'Telefone', inputFormatters: [maskFormatter]),
+            SizedBox(height: 16),
 
-          _buildTextField(_cidadeController, 'Cidade'),
-          SizedBox(height: 16),
+            _buildTextField(_cidadeController, 'Cidade'),
+            SizedBox(height: 16),
 
-          _buildDropdown(
-            value: _estadoSelecionado,
-            options: estadosBrasil,
-            hint: 'Selecione o Estado',
-            onChanged: (value) {
-              setState(() {
-                _estadoSelecionado = value;
-              });
-            },
-          ),
-          SizedBox(height: 16),
+            _buildDropdown(
+              value: _estadoSelecionado,
+              options: estadosBrasil,
+              hint: 'Selecione o Estado',
+              onChanged: (value) {
+                setState(() {
+                  _estadoSelecionado = value;
+                });
+              },
+            ),
+            SizedBox(height: 16),
 
-          Center(
-            child: InkWell(
-              onTap: _cadastrarDocumento,
-              borderRadius: BorderRadius.circular(12), // Bordas arredondadas
-              splashColor: Colors.blue.withOpacity(0.3), // Cor do splash
-              highlightColor: Colors.blue.withOpacity(0.2), // Cor do highlight
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-                transform: Matrix4.identity()..scale(0.95), // Efeito de escala ao pressionar
-                child: ElevatedButton(
-                  onPressed: _cadastrarDocumento,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue, // Cor do texto
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // Bordas arredondadas
+            Center(
+              child: InkWell(
+                onTap: _cadastrarDocumento,
+                borderRadius: BorderRadius.circular(12), // Bordas arredondadas
+                splashColor: Colors.blue.withOpacity(0.3), // Cor do splash
+                highlightColor: Colors.blue.withOpacity(0.2), // Cor do highlight
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                  transform: Matrix4.identity()..scale(0.95), // Efeito de escala ao pressionar
+                  child: ElevatedButton(
+                    onPressed: _cadastrarDocumento,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF001b48), // Cor do texto
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // Bordas arredondadas
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                      elevation: 5, // Sombra do botão
+                      shadowColor: Colors.blue.withOpacity(0.3), // Cor da sombra
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                    elevation: 5, // Sombra do botão
-                    shadowColor: Colors.blue.withOpacity(0.3), // Cor da sombra
-                  ),
-                  child: const Text(
-                    'Cadastrar',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    child: const Text(
+                      'Cadastrar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          )
-
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

@@ -5,9 +5,13 @@ class DicasSeguranca extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dicas de Segurança'),
-        backgroundColor: Colors.blue,
+      title: Text(
+        'Dicas de Segurança',
+        style: TextStyle(color: Colors.white), // Definindo a cor do texto como branco
       ),
+      backgroundColor: Color(0xFF001b48),
+      foregroundColor: Colors.white, // Garantir que os ícones da AppBar também sejam brancos
+    ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -21,7 +25,7 @@ class DicasSeguranca extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color:Color(0xFF001b48),
                   ),
                 ),
               ),

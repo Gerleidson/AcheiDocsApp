@@ -46,9 +46,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feedback'),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Feedback',
+          style: TextStyle(color: Colors.white), // Definindo a cor do texto como branco
+        ),
+        backgroundColor: Color(0xFF001b48),
+        foregroundColor: Colors.white, // Garantir que os ícones da AppBar também sejam brancos
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -62,7 +67,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Color(0xFF001b48),
                   ),
                 ),
               ),
@@ -84,12 +89,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: _enviarFeedback,
-                  child: Text(
-                    'Enviar Feedback',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                    child: Text(
+                      'Enviar Feedback',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color:Colors.white
+                      ),
+                    ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor:Color(0xFF001b48),
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

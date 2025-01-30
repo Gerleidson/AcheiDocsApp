@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class Sobre extends StatelessWidget {
   final String appVersion = "1.0.0"; // Altere para a versão do seu app
@@ -9,8 +11,14 @@ class Sobre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sobre'),
-        backgroundColor: Colors.blue,
+        title: Text(
+          'Sobre',
+          style: TextStyle(
+              color: Colors.white), // Definindo a cor do texto como branco
+        ),
+        backgroundColor: Color(0xFF001b48),
+        foregroundColor: Colors
+            .white, // Garantir que os ícones da AppBar também sejam brancos
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -24,7 +32,7 @@ class Sobre extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: Color(0xFF001b48),
                 ),
               ),
             ),
@@ -47,7 +55,7 @@ class Sobre extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: Icon(Icons.info, color: Colors.blue),
+                leading: Icon(Icons.info, color: Color(0xFF001b48)),
                 title: Text(
                   'Versão do Aplicativo',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -67,7 +75,7 @@ class Sobre extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: Icon(Icons.privacy_tip, color: Colors.blue),
+                leading: Icon(Icons.privacy_tip, color: Color(0xFF001b48)),
                 title: Text(
                   'Política de Privacidade',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -87,7 +95,7 @@ class Sobre extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: Icon(Icons.email, color: Colors.blue),
+                leading: Icon(Icons.email, color: Color(0xFF001b48)),
                 title: Text(
                   'Contato',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -111,28 +119,39 @@ class Sobre extends StatelessWidget {
   void _abrirUrl(String url, BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Abrir Link"),
-        content: Text("Deseja abrir este link no navegador?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancelar"),
+      builder: (context) =>
+          AlertDialog(
+            title: Text("Abrir Link"),
+            content: Text("Deseja abrir este link no navegador?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  // Código para abrir o navegador com a URL
+                },
+                child: Text("Abrir"),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Código para abrir o navegador com a URL
-            },
-            child: Text("Abrir"),
-          ),
-        ],
-      ),
     );
   }
 
   // Método para abrir o e-mail de suporte
-  void _abrirEmail(String email) {
-    // Código para abrir um cliente de e-mail (como Gmail, Outlook)
+  void _abrirEmail(String email) async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+
+    if (await canLaunch(emailUri.toString())) {
+      await launch(emailUri.toString());
+    } else {
+      // Caso não consiga abrir o e-mail
+      throw 'Não foi possível abrir o app de e-mail.';
+    }
   }
 }
