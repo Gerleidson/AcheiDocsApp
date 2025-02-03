@@ -35,7 +35,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("C:\\Users\\Gerleidson\\StudioProjects\\achei") // Caminho do keystore
+            storeFile file("C:\\Users\\Gerleidson\\StudioProjects\\achei\\chave-release.jks")
             storePassword "452119"
             keyAlias "meu-alias"
             keyPassword "452119"
