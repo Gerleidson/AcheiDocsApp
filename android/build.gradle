@@ -5,6 +5,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.google.gms:google-services:4.4.2'  // Versão recomendada
+        classpath 'com.android.tools.build:gradle:8.0.2' // Versão mais recente do plugin do Gradle
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0' // Versão mais recente do Kotlin
     }
 }
 
