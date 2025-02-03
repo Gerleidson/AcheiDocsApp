@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAqDi8D3ljwpt3dtkj7w8H-P_jrS6-U5XI',
-    appId: '1:390960971384:android:f0d21aada815628330778d',
+    appId: '1:390960971384:android:6a974c9f6187b1e130778d',
     messagingSenderId: '390960971384',
     projectId: 'acheidocs-c7b8f',
     databaseURL: 'https://acheidocs-c7b8f-default-rtdb.firebaseio.com',
@@ -60,7 +60,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCG1Tkd3OfafrfEONrqszChUwJm_a4P_io',
-    appId: '1:390960971384:ios:db9a79d42b3b775430778d',
+    appId: '1:390960971384:ios:1bd9bc790a23f8cb30778d',
     messagingSenderId: '390960971384',
     projectId: 'acheidocs-c7b8f',
     databaseURL: 'https://acheidocs-c7b8f-default-rtdb.firebaseio.com',

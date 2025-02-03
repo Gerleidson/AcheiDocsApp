@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:390960971384:android:f0d21aada815628330778d",
+        "mobilesdk_app_id": "1:390960971384:android:6a974c9f6187b1e130778d",
         "android_client_info": {
-          "package_name": "com.example.achei"
+          "package_name": "com.gerleidson.achei"
         }
       },
       "oauth_client": [],
