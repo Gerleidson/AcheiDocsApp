@@ -1,4 +1,4 @@
-package com.example.achei;
+package com.gerleidson.achei;
 
 import io.flutter.embedding.android.FlutterActivity;
 

@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.achei"
+    namespace = "com.gerleidson.achei"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
