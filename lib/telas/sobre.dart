@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Sobre extends StatelessWidget {
-  final String appVersion = "1.0.0"; // Altere para a versão do seu app
-  final String privacyPolicyUrl = "https://seusite.com/politica-de-privacidade"; // URL real
+  final String appVersion = "1.0.1"; // Versão do app
+  final String privacyPolicyUrl = "https://www.acheidocs.com.br/politica.html"; // URL real da política de privacidade
   final String suporteEmail = "computech.camacari@gmail.com"; // E-mail de suporte
 
   @override
@@ -12,12 +12,10 @@ class Sobre extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Sobre',
-          style: TextStyle(
-              color: Colors.white), // Definindo a cor do texto como branco
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color(0xFF001b48),
-        foregroundColor: Colors
-            .white, // Garantir que os ícones da AppBar também sejam brancos
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -31,7 +29,6 @@ class Sobre extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF001b48),
                 ),
               ),
             ),
@@ -42,7 +39,7 @@ class Sobre extends StatelessWidget {
               child: Text(
                 'O AcheiDocs é um aplicativo para ajudar na recuperação de documentos perdidos.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.black54),
+                style: TextStyle(fontSize: 16),
               ),
             ),
             SizedBox(height: 20),
@@ -54,14 +51,14 @@ class Sobre extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: Icon(Icons.info, color: Color(0xFF001b48)),
+                leading: Icon(Icons.info),
                 title: Text(
                   'Versão do Aplicativo',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text(
                   appVersion,
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
             ),
@@ -74,15 +71,15 @@ class Sobre extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: Icon(Icons.privacy_tip, color: Color(0xFF001b48)),
+                leading: Icon(Icons.privacy_tip),
                 title: Text(
                   'Política de Privacidade',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
-                  _abrirUrl(privacyPolicyUrl, context);
+                  _abrirUrl(privacyPolicyUrl);
                 },
-                trailing: Icon(Icons.arrow_forward, color: Colors.black54),
+                trailing: Icon(Icons.arrow_forward),
               ),
             ),
             SizedBox(height: 10),
@@ -94,14 +91,14 @@ class Sobre extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                leading: Icon(Icons.email, color: Color(0xFF001b48)),
+                leading: Icon(Icons.email),
                 title: Text(
                   'Contato',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text(
                   suporteEmail,
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                  style: TextStyle(fontSize: 16),
                 ),
                 onTap: () {
                   _abrirEmail(suporteEmail);
@@ -114,54 +111,28 @@ class Sobre extends StatelessWidget {
     );
   }
 
-  // Método para abrir URLs
-  void _abrirUrl(String url, BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) =>
-          AlertDialog(
-            title: Text("Abrir Link"),
-            content: Text("Deseja abrir este link no navegador?"),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("Cancelar"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _launchUrl(url); // Alteração aqui
-                },
-                child: Text("Abrir"),
-              ),
-            ],
-          ),
-    );
+  // Método para abrir URLs no navegador externo
+  void _abrirUrl(String url) async {
+    final Uri urlUri = Uri.parse(url);
+    if (await canLaunchUrl(urlUri)) {
+      await launchUrl(urlUri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Não foi possível abrir o link.';
+    }
   }
 
-  // Método para abrir o e-mail
+  // Método para abrir o app de e-mail
   void _abrirEmail(String email) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: email,
+      query: Uri(queryParameters: {'subject': 'Ajuda com o AcheiDocs'}).query,
     );
 
-    // Use launchUrl em vez de launch
     if (await canLaunchUrl(emailUri)) {
-      await launchUrl(emailUri);
+      await launchUrl(emailUri, mode: LaunchMode.externalApplication);
     } else {
-      // Caso não consiga abrir o e-mail
       throw 'Não foi possível abrir o app de e-mail.';
-    }
-  }
-
-  // Método para abrir URLs genéricas (como política de privacidade)
-  void _launchUrl(String url) async {
-    final Uri urlUri = Uri.parse(url);
-    if (await canLaunchUrl(urlUri)) {
-      await launchUrl(urlUri);
-    } else {
-      throw 'Não foi possível abrir o link.';
     }
   }
 }

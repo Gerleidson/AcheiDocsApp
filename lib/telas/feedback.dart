@@ -50,7 +50,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           'Feedback',
           style: TextStyle(color: Colors.white), // Definindo a cor do texto como branco
         ),
-        backgroundColor: Color(0xFF001b48),
+        backgroundColor: Color(0xff000000),
         foregroundColor: Colors.white, // Garantir que os ícones da AppBar também sejam brancos
       ),
 
@@ -67,7 +67,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF001b48),
                   ),
                 ),
               ),

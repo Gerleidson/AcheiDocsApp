@@ -297,12 +297,32 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
   ];
 
-  void _cadastrarDocumento() {
+  void _cadastrarDocumento() async {
     final nome = _nomeController.text.trim();
     final telefone = _telefoneController.text.trim();
     final cidade = _cidadeController.text.trim();
 
     if (nome.isNotEmpty && telefone.isNotEmpty && _documentoSelecionado != null && _estadoSelecionado != null) {
+      // Verificar se o nome já existe no banco de dados
+      final snapshot = await _dbRef.get();
+      if (snapshot.exists) {
+        final data = snapshot.value as Map<dynamic, dynamic>;
+
+        // Verificar se o nome já está no banco de dados
+        final nomeExiste = data.entries.any(
+              (entry) => entry.value["nome"]?.toLowerCase() == nome.toLowerCase(),
+        );
+
+        if (nomeExiste) {
+          // Se o nome já existe, mostrar mensagem de erro
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Este nome já está cadastrado!")),
+          );
+          return;  // Não prosseguir com o cadastro
+        }
+      }
+
+      // Caso o nome não exista, prosseguir com o cadastro
       _dbRef.push().set({
         "tipo": _tipoSelecionado,
         "nome": nome,
@@ -333,6 +353,7 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -356,7 +377,6 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF001b48),
                 ),
               ),
             ),
