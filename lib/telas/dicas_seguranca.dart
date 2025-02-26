@@ -61,6 +61,17 @@ class DicasSeguranca extends StatelessWidget {
                 'Se você não deseja devolver os documentos pessoalmente, pode deixá-los em um local seguro, como uma delegacia e informe a pessoa sobre o local para que ela possa retirá-los com segurança.',
                 style: TextStyle(fontSize: 16),
               ),
+              SizedBox(height: 16),
+
+              // Dica 4
+              Text(
+                '4. Verifique Regularmente:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Caso não tenha encontrado seu documento imediatamente, continue verificando a nossa plataforma. Às vezes, pode levar alguns dias ou semanas até que o item seja registrado.',
+                style: TextStyle(fontSize: 16),
+              ),
             ],
           ),
         ),

@@ -3,6 +3,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter/services.dart';
 
+import 'package:achei/telas/services/ibge_service.dart'; // Importe a classe IBGEService
+import 'package:achei/telas/models/localidade.dart'; // Certifique-se de importar as classes Estado e Cidade
+
+
 // Importação das telas
 import 'package:achei/telas/dicas_seguranca.dart';
 import 'package:achei/telas/sobre.dart';
@@ -273,6 +277,8 @@ class CadastrarDocumento extends StatefulWidget {
   _CadastrarDocumentoState createState() => _CadastrarDocumentoState();
 }
 
+
+
 class _CadastrarDocumentoState extends State<CadastrarDocumento> {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref("documentos");
 
@@ -288,41 +294,58 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
   String _tipoSelecionado = 'Achado';
   String? _documentoSelecionado;
   String? _estadoSelecionado;
+  String? _cidadeSelecionada;
 
   List<String> documentos = [
     'RG', 'CPF', 'CTPS', 'CNH', 'Passaporte', 'Título de Eleitor', 'Certidão', 'Outros'
   ];
 
-  List<String> estadosBrasil = [
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-  ];
+  List<Estado> _estados = []; // Lista para armazenar os estados
+  List<Cidade> _cidades = []; // Lista para armazenar as cidades
 
-  void _cadastrarDocumento() async {
+  @override
+  void initState() {
+    super.initState();
+    _carregarEstados();
+  }
+
+  // Carregar estados da API do IBGE
+  Future<void> _carregarEstados() async {
+    try {
+      List<Estado> estados = await IBGEService.obterEstados();
+      print("Estados carregados com sucesso: $estados");  // Verifique se os estados estão sendo carregados
+      setState(() {
+        _estados = estados;
+      });
+    } catch (e) {
+      print("Erro ao carregar estados: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao carregar estados: $e")),
+      );
+    }
+  }
+
+
+  // Carregar cidades baseado na sigla do estado
+  Future<void> _carregarCidades(String estadoSigla) async {
+    try {
+      List<Cidade> cidades = await IBGEService.obterCidades(estadoSigla);
+      setState(() {
+        _cidades = cidades;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao carregar cidades: $e")),
+      );
+    }
+  }
+
+  void _cadastrarDocumento() {
     final nome = _nomeController.text.trim();
     final telefone = _telefoneController.text.trim();
-    final cidade = _cidadeController.text.trim();
+    final cidade = _cidadeSelecionada;
 
-    if (nome.isNotEmpty && telefone.isNotEmpty && _documentoSelecionado != null && _estadoSelecionado != null) {
-      // Verificar se o nome já existe no banco de dados
-      final snapshot = await _dbRef.get();
-      if (snapshot.exists) {
-        final data = snapshot.value as Map<dynamic, dynamic>;
-
-        // Verificar se o nome já está no banco de dados
-        final nomeExiste = data.entries.any(
-              (entry) => entry.value["nome"]?.toLowerCase() == nome.toLowerCase(),
-        );
-
-        if (nomeExiste) {
-          // Se o nome já existe, mostrar mensagem de erro
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Este nome já está cadastrado!")),
-          );
-          return;  // Não prosseguir com o cadastro
-        }
-      }
-
-      // Caso o nome não exista, prosseguir com o cadastro
+    if (nome.isNotEmpty && telefone.isNotEmpty && _documentoSelecionado != null && _estadoSelecionado != null && _cidadeSelecionada != null) {
       _dbRef.push().set({
         "tipo": _tipoSelecionado,
         "nome": nome,
@@ -340,6 +363,7 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
         setState(() {
           _documentoSelecionado = null;
           _estadoSelecionado = null;
+          _cidadeSelecionada = null;
         });
       }).catchError((error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -353,20 +377,18 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3.0), //tamanho da largura da borda
+      padding: const EdgeInsets.all(3.0),
       child: Container(
-        padding: const EdgeInsets.all(16.0), // Adiciona padding interno ao
-        // container
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           border: Border.all(
-            color: Color(0xFF001b48), // Cor da borda
-            width: 2.0, // Largura da borda
+            color: Color(0xFF001b48),
+            width: 2.0,
           ),
-          borderRadius: BorderRadius.circular(12), // Borda arredondada
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,8 +403,6 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
               ),
             ),
             SizedBox(height: 20),
-
-            // Tipo - Radio Buttons
             Text(
               'Situação:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -413,10 +433,8 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
               ],
             ),
             SizedBox(height: 20),
-
             _buildTextField(_nomeController, 'Nome Completo'),
             SizedBox(height: 16),
-
             _buildDropdown(
               value: _documentoSelecionado,
               options: documentos,
@@ -428,46 +446,79 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
               },
             ),
             SizedBox(height: 16),
-
             _buildTextField(_telefoneController, 'Telefone', inputFormatters: [maskFormatter]),
             SizedBox(height: 16),
+        DropdownButtonFormField<String>(
+          value: _estadoSelecionado,
+          decoration: InputDecoration(
+            labelText: 'Estado',
+            border: OutlineInputBorder(),
+          ),
+          items: _estados.map((estado) {
+            return DropdownMenuItem<String>(
+              value: estado.sigla,
+              child: Text(estado.nome),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _estadoSelecionado = value;
+              _cidadeSelecionada = null; // Resetar cidade
+              _cidades = []; // Limpa cidades antes de buscar novamente
+            });
+            if (value != null) {
+              _carregarCidades(value);
+            }
+          },
+        ),
 
-            _buildTextField(_cidadeController, 'Cidade'),
-            SizedBox(height: 16),
 
-            _buildDropdown(
-              value: _estadoSelecionado,
-              options: estadosBrasil,
-              hint: 'Selecione o Estado',
+
+        SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: _cidadeSelecionada,
+              decoration: InputDecoration(
+                labelText: 'Cidade',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              items: _cidades.map((cidade) {
+                return DropdownMenuItem(
+                  value: cidade.nome,
+                  child: Text(cidade.nome),
+                );
+              }).toList(),
               onChanged: (value) {
                 setState(() {
-                  _estadoSelecionado = value;
+                  _cidadeSelecionada = value;
                 });
               },
             ),
-            SizedBox(height: 16),
 
+
+            SizedBox(height: 16),
             Center(
               child: InkWell(
                 onTap: _cadastrarDocumento,
-                borderRadius: BorderRadius.circular(12), // Bordas arredondadas
-                splashColor: Colors.blue.withOpacity(0.3), // Cor do splash
-                highlightColor: Colors.blue.withOpacity(0.2), // Cor do highlight
+                borderRadius: BorderRadius.circular(12),
+                splashColor: Colors.blue.withOpacity(0.3),
+                highlightColor: Colors.blue.withOpacity(0.2),
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
-                  transform: Matrix4.identity()..scale(0.95), // Efeito de escala ao pressionar
+                  transform: Matrix4.identity()..scale(0.95),
                   child: ElevatedButton(
                     onPressed: _cadastrarDocumento,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFF001b48), // Cor do texto
+                      backgroundColor: Color(0xFF001b48),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12), // Bordas arredondadas
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                      elevation: 5, // Sombra do botão
-                      shadowColor: Colors.blue.withOpacity(0.3), // Cor da sombra
+                      elevation: 5,
+                      shadowColor: Colors.blue.withOpacity(0.3),
                     ),
                     child: const Text(
                       'Cadastrar',
@@ -479,7 +530,7 @@ class _CadastrarDocumentoState extends State<CadastrarDocumento> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
